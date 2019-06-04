@@ -1,6 +1,6 @@
-# infinite-scroll-vuejs
+# git-repos-front-vuejs 
 
-> A Vue.js project
+> A Vue.js project that consumes GitHub Repositories API v3.
 
 ## Build Setup
 
@@ -15,4 +15,5 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
