@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-dist/
+# dist/ # Removendo para rodar no heroku
 npm-debug.log
 yarn-error.log
 
