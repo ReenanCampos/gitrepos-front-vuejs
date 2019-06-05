@@ -27,9 +27,7 @@ Examples:
 ```
 
 ### Heroku DEMO working / Frontend VueJS
-``` bash
 > Link: https://gitrepos-front-vuejs.herokuapp.com/
-``` 
 
 ### Git Repository Backend JAVA
 > Repository: *[PRIVATE]*
