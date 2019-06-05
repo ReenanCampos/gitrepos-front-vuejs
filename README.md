@@ -16,25 +16,27 @@ npm run build
 ```
 
 
---------------------- About Project ---------------------
+# ------- Working Project 05/06/2019 -------
 
-# Heroku API Backend JAVA
+### Heroku API working / Backend JAVA
 URL: https://topi-renancampos.herokuapp.com/
 Examples:
- - [GET] https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?language=java&page=1
- - [GET] https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?language=python&page=1
- 
- 
-# Git Repository Frontend VueJS
-URL: https://github.com/ReenanCampos/gitrepos-front-vuejs
+``` bash
+  - [GET] https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?language=java&page=1
+  - [GET] https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?language=python&page=1
+```
+
+### Heroku DEMO working / Frontend VueJS
+``` bash
+> Link: https://gitrepos-front-vuejs.herokuapp.com/
+``` 
+
+### Git Repository Backend JAVA
+> Repository: *[PRIVATE]*
+### Git Repository Frontend VueJS
+> Repository: https://github.com/ReenanCampos/gitrepos-front-vuejs
 
 
-
-## Need to complete the goal:
- - Add SearchBar on VueJS project
- - Customize frontend theme
- - Connect front + back
  
  
- 
- 
+Renan Campos © 2019
