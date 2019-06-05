@@ -2,67 +2,34 @@
   <div id="app">
     <h1>Git Repositories Info </h1>
     
-
-<!--
-<img :src="'https://avatars3.githubusercontent.com/u/36260787?v=4'" height="72" width="72">
-Full Name Repo: CyC2018/CS-Notes
-Start: 64689
-Forks: 19816 
-
-<img :src="'https://avatars1.githubusercontent.com/u/582346?v=4'" height="72" width="72">
-Full Name Repo: iluwatar/java-design-patterns
-Start: 48081
-Forks: 15579 
-
-<img :src="'https://avatars0.githubusercontent.com/u/29880145?v=4'" height="72" width="72">
-Full Name Repo: Snailclimb/JavaGuide
-Start: 42293
-Forks: 13365 -->
-
-
-
-<!--
-    <div v-for="(item, $index) in list" :key="$index">
-      Photo: {{item.avatar_url}} 
-      Full Name Repo: {{item.full_name}} 
-      
-      Start: {{item.stargazers_count}} 
-      Forks: {{item.forks_count}}
-
-      Description: {{item.description}}
-      URL: {{item.html_url}}
-
-      <br>
+    <div>
+      <div class="person search">
+        <!-- object value -->
+          <model-select :options="options"
+                                  v-model="item"
+                                  placeholder="select item">
+          </model-select>
+      </div>
     </div>
 
-    <infinite-loading @infinite="infiniteHandler"></infinite-loading>
- -->
-
-
- <br><br><br><br><br>
-
-<div id="app">
-  <div class="container">
-
     <transition-group name="fade" tag="div" class="row">
-      <div v-for="(repo, key) in dadosTeste" :key="key" class="col-md-6 col-lg-4">
+      <div v-for="(repo, $key) in list" :key="$key" class="col-md-6 col-lg-4">
         <div class="person">
           <div class="person__header">
-            <img v-bind:src="repo.avatar_url" v-bind:alt="person" class="rounded img-thumbnail" height="126px" width="126px">
+            <img v-bind:src="repo.profileImageURL" class="rounded img-thumbnail" height="126px" width="126px">
             <br>
-            <a class="person__name" v-bind:href="repo.html_url" >{{repo.full_name}}</a>
+            <a target="_blank" class="person__name" v-bind:href="repo.urlrepositoryPath" >{{repo.fullRepositoryName}}</a>
           </div>
           <div class="person__email">
-            <p><b>Current Stars: </b>{{repo.stargazers_count}}</p>
-            <p><b>Current Forks: </b>{{repo.forks_count}}</p>
+            <p><b>Current Stars: </b>{{repo.currentStargazers}}</p>
+            <p><b>Current Forks: </b>{{repo.currentForks}}</p>
           </div>
           <br>
         </div>
       </div>
     </transition-group>
 
-  </div>
-</div>
+    <infinite-loading @infinite="infiniteHandler"></infinite-loading>
 
   </div>
  
@@ -72,10 +39,15 @@ Forks: 13365 -->
 import axios from 'axios';
 import moment from 'moment';
 import InfiniteLoading from 'vue-infinite-loading';
+import { ModelSelect } from 'vue-search-select'
+import availableLanguages062019 from '../json/availableLanguages062019.json'
 
 const api = 'https://hn.algolia.com/api/v1/search_by_date?tags=story';
 const api2 = 'https://randomuser.me/api/';
-const api3 = 'https://api.github.com/search/repositories?q=language:Java&sort=stars&page=1';
+const api3 = 'https://api.github.com/search/repositories';
+const api4 = 'https://topi-renancampos.herokuapp.com/';
+const api5 = 'localhost:8081/api/GitRepository/findByFilter';
+
 
 export default {
   name: 'app',
@@ -86,10 +58,17 @@ export default {
 
       page: 1,
       list: [],
+      language: 'Java',
 
       people: [],
       quantity: 6,
       title:"RandomUser.me / Vue.js / Axios",
+
+      options: availableLanguages062019,
+      item: {
+        value: 'Java',
+        text: 'Java'
+      },
 
       dadosTeste:
       [
@@ -119,7 +98,15 @@ export default {
     }
   },
   methods: {
-    getInitialUsers () {
+      reset () {
+        this.item = {}
+      },
+      selectFromParentComponent1 () {
+        // select option from parent component
+        this.item = this.options[0]
+        console.log("selecionado:" + this.item.value);
+      },
+    /*getInitialUsers () {
       for (var i = 0; i < 5; i++) {
         console.log(i);
         axios.get(`https://randomuser.me/api/`)
@@ -139,50 +126,56 @@ export default {
             });
         }
       };
-    },
+    },*/
 
     infiniteHandler($state) {
-      axios.get(api3, {
-        params: {
-          page: this.page,
-        },
-      }).then(({ data }) => {
-        if (data.incomplete_results) {
-          this.page += 1;
-          this.list.push(...data.items);
-          console.log("Puxou! -> ", data);
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
-      });
+      console.log("bora");
+      axios.get("https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?" + "language=" + this.language + "&page=" + this.page).then(({ data }) => {
+        console.log("Puxou! -> ", data);
+        console.log("Pagina! -> ", this.page);
+        this.page += 1;
+        this.list.push(...data.items);
+        $state.loaded();
+      })
     },
-
-    getPeople: function () { 
-        // ** axios requires a promise polyfill for ie11 **//
-        axios.get(api2 + "?results=" + this.quantity)
-          .then((rsp)=>this.people = rsp.data.results)
-
-      //**normal XMLHttpRequest **//
-        // var url = endpoint + this.quantity;
-        // var request = new XMLHttpRequest();
-        // request.open("GET", url);
-        // request.responseType = 'json';
-        // request.send();
-        // request.onload = ()=> this.people = request.response.results;
+    
+    resetRepositories(){
+      this.page = 1;
+      this.list = [];
     }
 
   },
-  beforeMount() {
+  /*beforeMount() {
     this.getInitialUsers();
     console.log(this.persons);
   },
   mounted() {
   this.scroll(this.person);
-  },
+  },*/
   created: function () {
     this.getPeople();
+  },
+  components: {
+    ModelSelect
+  },
+  watch: {
+    item: function(item) {
+
+      item.value = item.value.replace("\\s+","-");
+
+      console.log("value: " + item.value);
+      this.language = item.value;
+      this.page = 1;
+      this.list = [];
+      axios.get("https://topi-renancampos.herokuapp.com/api/GitRepository/findByFilter?" + "language=" + this.item.value + "&page=" + this.page).then(({ data }) => {
+        this.page += 1;
+        this.list.push(...data.items);
+        $state.loaded();
+      })
+
+    }
   }
+
 }
 </script>
 
@@ -201,6 +194,12 @@ export default {
       color: rgb(95, 95, 168);
     
     }
+
+    word-break: break-all;
+  }
+
+  .search{
+    max-width: 93%;
   }
 
   .fade-enter-active, .fade-leave-active {
@@ -238,4 +237,6 @@ export default {
     }
 
   }
+
+
 </style>
